@@ -1,0 +1,27 @@
+Dir {
+    dirs: {
+      a: Dir {
+        dirs: {
+          e: Dir { dirs: {}, files: { i: File { size: 584 } }, size: 584 }
+        },
+        files: {
+          f: File { size: 29116 },
+          g: File { size: 2557 },
+          'h.lst': File { size: 62596 }
+        },
+        size: 94853
+      },
+      d: Dir {
+        dirs: {},
+        files: {
+          j: File { size: 4060174 },
+          'd.log': File { size: 8033020 },
+          'd.ext': File { size: 5626152 },
+          k: File { size: 7214296 }
+        },
+        size: 24933642
+      }
+    },
+    files: { 'b.txt': File { size: 14848514 }, 'c.dat': File { size: 8504156 } },
+    size: 48381165
+  }
