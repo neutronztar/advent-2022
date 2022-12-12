@@ -51,6 +51,8 @@ function moveTail(H, T) {
             T.y--;
             return;
         }
+        console.log('oops');
+        process.exit(1);
     }
     // Horizontally lined up case
     if (H.y === T.y) {
@@ -62,44 +64,60 @@ function moveTail(H, T) {
             T.x--;
             return;
         }
+        console.log('oops');
+        process.exit(1);
     }
     // Tail 2 above and offset case
-    if (H.y === T.y - 2) {
+    if (H.y === T.y - 2 && Math.abs(H.x - T.x) < 2) {
         T.x = H.x;
         T.y--;
         return;
     }
     // Tail 2 below and offset case
-    if (H.y === T.y + 2) {
+    if (H.y === T.y + 2 && Math.abs(H.x - T.x) < 2) {
         T.x = H.x;
         T.y++;
         return;
     }
     // Tail 2 right and offset case
-    if (H.x === T.x - 2) {
+    if (H.x === T.x - 2 && Math.abs(H.y - T.y) < 2) {
         T.y = H.y;
         T.x--;
         return;
     }
     // Tail 2 left and offset case
-    if (H.x === T.x + 2) {
+    if (H.x === T.x + 2 && Math.abs(H.y - T.y) < 2) {
         T.y = H.y;
         T.x++;
+        return;
+    }
+    // Corner case
+    if (Math.abs(H.x - T.x) === 2 && Math.abs(H.y - T.y) === 2) {
+        T.x = (H.x + T.x) / 2;
+        T.y = (H.y + T.y) / 2;
         return;
     }
     console.log('Uh oh spaghetio');
     process.exit(1);
 }
 
-function simulateMoves(moves, tailHistory) {
-    let H = { x: 0, y: 0 }; // Head
-    let T = { x: 0, y: 0 }; // Tail
+function simulateMoves(moves, tailHistory, ropeLength) {
+    let rope = [];
+    for (let i = 0; i <= ropeLength; i++) {
+        rope.push({ x: 0, y: 0 });
+    }
 
     for (const move of moves) {
         for (let i = 0; i < move.quantity; i++) {
-            moveHead(H, move.direction);
-            moveTail(H, T);
-            tailHistory.push({x: T.x, y: T.y});
+            moveHead(rope[0], move.direction);
+
+            for (let i = 0; i < ropeLength; i++) {
+                
+                //console.log(i, ':', rope[i], i+1, ':', rope[i+1]);
+                moveTail(rope[i], rope[i+1]);
+            }
+            
+            tailHistory.push({x: rope[ropeLength].x, y: rope[ropeLength].y});
         }
     }
 }
@@ -120,8 +138,6 @@ fs.readFile(PATH, (err, data) => {
     if (err) throw err;
     let moves = processInput(data);
     let tailHistory = [];
-    simulateMoves(moves, tailHistory);
-    console.log('(pt1) Unique Tail Positions:', countUnique(tailHistory));
-
-    let longTailHistory = [];
+    simulateMoves(moves, tailHistory, 9);
+    console.log('Unique Tail Positions:', countUnique(tailHistory));
 });
